@@ -254,23 +254,25 @@ ul, ol {
    5. Hero
    ------------------------------------------------------------ */
 .hero {
-  min-height: 100vh;
+  /* height tracks the SVG's natural ratio (375/1200 = 31.25vw) so cover
+     never needs to zoom in — floor at 500px so it still looks good on narrow screens */
+  min-height: max(500px, 31.25vw);
   position: relative;
   overflow: hidden;
   display: flex;
   align-items: center;
-  padding: 120px var(--space-md) 80px;
+  padding: clamp(60px, 8vw, 120px) var(--space-md);
 }
 
 .hero__content {
   position: relative;
   z-index: 1;
-  max-width: 600px;
+  max-width: clamp(340px, 45%, 640px);
 }
 
 .hero__label {
   display: block;
-  font-size: 11px;
+  font-size: clamp(10px, 1vw, 13px);
   font-weight: 500;
   color: var(--color-text-secondary);
   text-transform: uppercase;
@@ -279,7 +281,7 @@ ul, ol {
 }
 
 .hero__heading {
-  font-size: clamp(42px, 6vw, 72px);
+  font-size: clamp(28px, 4vw, 64px);
   font-weight: 700;
   line-height: 1.1;
   letter-spacing: -0.02em;
@@ -288,7 +290,7 @@ ul, ol {
 }
 
 .hero__tagline {
-  font-size: 18px;
+  font-size: clamp(14px, 1.4vw, 18px);
   color: var(--color-text-secondary);
   line-height: 1.7;
   max-width: 520px;
@@ -319,7 +321,12 @@ ul, ol {
 
 @media (max-width: 768px) {
   .hero {
-    padding: 100px 20px 60px;
+    min-height: 420px;
+    padding: 80px 20px 60px;
+  }
+
+  .hero__content {
+    max-width: 100%;
   }
 }
 
