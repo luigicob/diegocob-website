@@ -253,21 +253,40 @@ ul, ol {
 /* ------------------------------------------------------------
    5. Hero
    ------------------------------------------------------------ */
+
+/*
+  Layout intent:
+  - .hero is the full-bleed section; it starts at y:0 behind the fixed nav.
+  - padding-top must clear the nav (--nav-height: 72px) plus breathing room.
+    calc(var(--nav-height) + clamp(40px, 5vw, 80px)) guarantees content never
+    slides under the nav regardless of viewport width or zoom level.
+  - padding-inline uses max() to replicate the same left-edge alignment that
+    max-width + margin-inline:auto gives other sections — at 1920px this
+    automatically pushes the text column inward ~360px from the edge,
+    matching the grid of every other section.
+  - min-height: nav-height + max(480px, 31.25vw) ensures the visible area
+    below the nav is never less than 480px. The 31.25vw term (375/1200)
+    matches the SVG's natural aspect ratio so cover-fit crops minimally.
+  - .hero__photo uses object-position: 65% center to surface the paper-plane
+    illustration (which lives in the right portion of the wide canvas) rather
+    than the empty sky on the left side.
+*/
+
 .hero {
-  /* height tracks the SVG's natural ratio (375/1200 = 31.25vw) so cover
-     never needs to zoom in — floor at 500px so it still looks good on narrow screens */
-  min-height: max(500px, 31.25vw);
+  min-height: calc(var(--nav-height) + max(480px, 31.25vw));
   position: relative;
   overflow: hidden;
   display: flex;
   align-items: center;
-  padding: clamp(60px, 8vw, 120px) var(--space-md);
+  /* top padding clears the fixed nav; inline padding mirrors max-width centering */
+  padding-block: calc(var(--nav-height) + clamp(40px, 5vw, 80px)) clamp(40px, 5vw, 80px);
+  padding-inline: max(var(--space-md), calc((100% - var(--max-width)) / 2 + var(--space-md)));
 }
 
 .hero__content {
   position: relative;
   z-index: 1;
-  max-width: clamp(340px, 45%, 640px);
+  max-width: clamp(340px, 48%, 580px);
 }
 
 .hero__label {
@@ -281,7 +300,7 @@ ul, ol {
 }
 
 .hero__heading {
-  font-size: clamp(28px, 4vw, 64px);
+  font-size: clamp(28px, 3.5vw, 56px);
   font-weight: 700;
   line-height: 1.1;
   letter-spacing: -0.02em;
@@ -290,10 +309,10 @@ ul, ol {
 }
 
 .hero__tagline {
-  font-size: clamp(14px, 1.4vw, 18px);
+  font-size: clamp(14px, 1.3vw, 17px);
   color: var(--color-text-secondary);
   line-height: 1.7;
-  max-width: 520px;
+  max-width: 480px;
   margin-bottom: 48px;
 }
 
@@ -314,19 +333,32 @@ ul, ol {
 .hero__photo-img {
   width: 100%;
   height: 100%;
+  /*
+    object-fit: cover keeps the image full-bleed with no empty bars.
+    object-position: 65% center favours the right portion of the very wide
+    SVG canvas (viewBox left-edge at -600 means the illustration occupies the
+    right two-thirds) so the paper-plane is visible instead of empty sky.
+  */
   object-fit: cover;
-  object-position: center center;
+  object-position: 65% center;
   display: block;
 }
 
 @media (max-width: 768px) {
   .hero {
-    min-height: 420px;
-    padding: 80px 20px 60px;
+    min-height: calc(var(--nav-height) + 380px);
+    /* revert to simple padding on mobile; no wide-viewport centering needed */
+    padding-block: calc(var(--nav-height) + 32px) 48px;
+    padding-inline: 20px;
   }
 
   .hero__content {
     max-width: 100%;
+  }
+
+  .hero__photo-img {
+    /* on narrow screens keep the plane roughly centred horizontally */
+    object-position: 60% center;
   }
 }
 
