@@ -281,6 +281,9 @@ ul, ol {
   align-items: center;
   padding-block: calc(var(--nav-height) + clamp(40px, 5vw, 80px)) clamp(40px, 5vw, 80px);
   padding-inline: max(var(--space-md), calc((100% - var(--max-width)) / 2 + var(--space-md)));
+  /* Fallback color matches dominant dark left-side tone of the watercolor image.
+     Prevents any zoom-rounding gap from exposing the white body or accent blue. */
+  background-color: #1a1a2e;
 }
 
 /* Dark-to-transparent gradient overlay ensures WCAG AA contrast for white text
@@ -353,14 +356,20 @@ ul, ol {
   position: absolute;
   inset: 0;
   z-index: 0;
+  /* min-width/min-height guard against sub-pixel shortfall at non-integer zoom
+     levels where width/height:100% can resolve to 1–2 px less than the container */
   width: 100%;
   height: 100%;
+  min-width: 100%;
+  min-height: 100%;
   pointer-events: none;
 }
 
 .hero__photo-img {
   width: 100%;
   height: 100%;
+  min-width: 100%;
+  min-height: 100%;
   object-fit: cover;
   object-position: center center;
   display: block;
